@@ -1,0 +1,49 @@
+from rest_framework import serializers
+from sgdapi.models import Account, AccountHolder, Transaction
+from sgdapi.validators import *
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'
+
+class AccountHolderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountHolder
+        exclude = ['password']
+
+    def validate(self, data):
+        if not valid_name(data['first_name']):
+            raise serializers.ValidationError({'first_name': 'Do not incluse numbers in this field'})
+
+        if not valid_name(data['second_name']):
+            raise serializers.ValidationError({'second_name': 'Do not incluse numbers in this field'})
+
+        if not valid_phone(data['phone']):
+            raise serializers.ValidationError({'phone': 'Phone needs to follow the example: 11912345678'})
+        
+        return data
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = '__all__'
+
+class AllTransactionsForAnAccountHolderSerializer(serializers.ModelSerializer):
+    first_name = serializers.ReadOnlyField(source='send_to_account.first_name') # Teve que ser send_to_account porque há duas FK nessatabela e o background do django conflita se account(linha abaixo já usa)
+    sent_to = serializers.ReadOnlyField(source='account.account_name') # Não é o campo do model, mas o campo de Transaction (account), que, por aqui, pode ser navegado, pois tem referência do model Account
+    transaction_type = serializers.SerializerMethodField()
+    class Meta:
+        model = Transaction
+        fields = ['first_name', 'sent_to', 'transaction_type','created_at', 'description', 'status']
+
+    def get_transaction_type(self, obj):
+        return obj.get_transaction_type_display()
+
+class AllTransactionsForAnAccountSerializer(serializers.ModelSerializer):
+    account_name = serializers.ReadOnlyField(source='account.account_name')
+    first_name = serializers.ReadOnlyField(source='account.first_name')
+    sent_to = serializers.ReadOnlyField(source='account.account_name')
+    class Meta:
+        model = Transaction
+        fields = ['account_name', 'first_name', 'sent_to', 'transaction_type','created_at', 'description', 'status']

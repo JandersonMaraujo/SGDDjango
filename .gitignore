@@ -1,0 +1,6 @@
+venv/
+deploy/.env
+media_root/
+sgd/__pycache__/
+sgdapi/__pycache__/
+venv/
