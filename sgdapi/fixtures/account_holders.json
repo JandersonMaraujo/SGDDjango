@@ -1,0 +1,46 @@
+[
+    {
+        "model": "sgdapi.accountholder",
+        "pk": 1,
+        "fields": {
+            "user_id": "xiquin.cebola",
+            "first_name": "Xiquin",
+            "second_name": "Araujo",
+            "nick_name": "Xi",
+            "email": "xiquin.maraujo@gmail.com",
+            "birth_date": "1991-11-28",
+            "sex": "M",
+            "cep": "06835390",
+            "street": "Av Hercílio Wustemberg",
+            "number": 454,
+            "district": "Jd. Pinheirinho",
+            "city": "Embu das Artes",
+            "state": "SP",
+            "phone": "11986969926",
+            "prof_pic": "",
+            "active": true
+        }
+    },
+    {
+        "model": "sgdapi.accountholder",
+        "pk": 2,
+        "fields": {
+            "user_id": "xiquin.arroz",
+            "first_name": "Xiquindenovo",
+            "second_name": "arroz",
+            "nick_name": "Xi",
+            "email": "xiquin.marfgaujo@gmail.com",
+            "birth_date": "1991-11-28",
+            "sex": "M",
+            "cep": "06835390",
+            "street": "Av Hercílio Wustemberg",
+            "number": 454,
+            "district": "Jd. Pinheirinho",
+            "city": "Embu das Artes",
+            "state": "SP",
+            "phone": "11986969926",
+            "prof_pic": "",
+            "active": true
+        }
+    }
+]

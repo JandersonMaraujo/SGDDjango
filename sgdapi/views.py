@@ -1,4 +1,3 @@
-from urllib import response
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from sgdapi.models import Account, AccountHolder, Transaction
@@ -20,9 +19,9 @@ class AccountHolderViewSet(viewsets.ModelViewSet):
 
     def create(self, request): # rewriting the create method in order to send to header the key location with the uri/url for future uses (create doesnt do this by default).
         serializer = self.serializer_class(data=request.data) # serializer rceive all data from the request
-        if serializer.is_valid(): # It is obligatory checking the data content.
+        if serializer.is_valid(raise_exception=True): # It is obligatory checking the data content.
             serializer.save() # If it is ok, save data into model (because serializers always extend model)
-            id = str(serializer.data['id']) # getting the id from the model(because it was already created. Before creation we dont have an id for it)
+            id = str(serializer.data['user_id']) # getting the id from the model(because it was already created. Before creation we dont have an id for it)
             response = Response(serializer.data, status=status.HTTP_201_CREATED) # The default create method has to have a response to be returned. Here we're preparing our response with the data and, which is a good practice, inform te status code
             response['Location'] = request.build_absolute_uri() + id # Finally we're creating the Location key and its value, which is the url path for this resource (plus its id :))
             return response # returning teh response with the Location. New level of maturity. Maybe it is a good idea to do it to other classes
