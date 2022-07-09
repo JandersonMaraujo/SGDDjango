@@ -37,12 +37,13 @@ class Account(models.Model):
     account_name = models.CharField(max_length=50, null=False)
     user = models.ForeignKey(to=AccountHolder, on_delete=models.CASCADE)
     description = models.TextField()
-    initials = models.CharField(max_length=7)
+    initials = models.CharField(max_length=15)
     percent = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)], default=10)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     account_name_real_life = models.CharField(max_length=50)
+    image = models.ImageField(blank=True)
     active = models.BooleanField(default=True)
 
 class Transaction(models.Model):
@@ -59,9 +60,11 @@ class Transaction(models.Model):
     )
 
     user = models.ForeignKey(to=AccountHolder, on_delete=models.CASCADE)
+    send_to_user = models.ForeignKey(to=AccountHolder, related_name='send_to_user', on_delete=models.CASCADE)
     account = models.ForeignKey(to=Account, on_delete=models.CASCADE)
     transaction_type = models.CharField(max_length=2, choices=TRANSACTION_OPTION, null=False, default='D')
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField()
-    send_to_account = models.ForeignKey(to=AccountHolder, related_name='send_to_account', on_delete=models.CASCADE)
+    send_to_account = models.ForeignKey(to=Account, related_name='send_to_account', on_delete=models.CASCADE)
     status = models.CharField(max_length=10, null=True)
+    

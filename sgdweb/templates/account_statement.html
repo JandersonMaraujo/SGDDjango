@@ -46,67 +46,84 @@
             </div>
           </nav>
           <br>
-          <p><small>Olá, {{pote_do_banco.0.user}}!</small></p><br>
-          <h5>{{ message }}</h5>
+          <p><small>Olá, {{pote_do_banco.0.user}}!</small></p>
+          <p><small>Extrato</small></p>
+        <table class="table table-striped table-responsive table-bordered responsive-font-example">
+            <thead class="thead-default">
+                <tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                    <th>Para Conta</th>
+                    <th>Para corretista</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+            <tbody>          
+                <tr>
+                    <td>28/11/2022 08:00</td>
+                    <td>Depósito</td>
+                    <td>Pagamento do dia 30</td>
+                    <td>LFA</td>
+                    <td>janderson.araujo</td>
+                    <td>Sucesso</td>
+                    <td>RS200,00</td>
+                    <td>RS200,00</td>
+                </tr>
+            </tbody>
+        </table>
 
-        <h5 class="card-title">Contas</h5>
+        <table class="table table-striped table-responsive table-bordered responsive-font-example">
+          <thead class="thead-default">
+              <tr>
+                  <th>Data</th>
+                  <th>Tipo</th>
+                  <th>Descrição</th>
+                  <th>Para Conta</th>
+                  <th>Para corretista</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Saldo</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for i in data %}          
+              <tr>
+                  <td>{{i.created_at}}</td>
+                  <td>{{i.transaction_type}}</td>
+                  <td>{{i.description}}</td>
+                  <td>{{i.send_to_account_name}}</td>
+                  <td>{{i.account_holder}}</td>
+                  <td>{{i.status}}</td>
+                  <td>RS200,00</td>
+                  <td>RS200,00</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+      </table>
 
-        <div class="row">
+        <!-- <h5 class="card-title">Contas</h5> -->
+
+        <!-- <div class="row">
             {% for pote in pote_do_banco%}
-            <div class="col-sm-6 responsive-font-example">
-              <div class="card text-dark card-effect shadow bg-light mb-2">
+            <div class="col-sm-6">
+              <div class="card text-dark bg-light mb-2">
                 <div class="card-body">
                   <h5 class="card-title">{{pote.account_name}}</h5>
                   <p class="card-text">{{pote.description}}</p>
                   <p class="card-text">{{pote.account_name_real_life}}</p>
                   <p class="card-text produto-preco">Saldo {{pote.balance}}</p>
-                  <a href="{% url 'account_statement' %}" class="btn btn-outline-secondary btn-sm">Extrato</a>
-                  <a href="{% url 'withdraw' %}" class="btn btn-outline-secondary btn-sm">Sacar</a>
-                  <a href="{% url 'deposit' %}" class="btn btn-outline-secondary btn-sm">Depositar</a>
-                  <a href="{% url 'transfer' %}" class="btn btn-outline-secondary btn-sm">Tranferir</a>
+                  <a href="#" class="btn btn-outline-secondary btn-sm">Extrato</a>
+                  <a href="#" class="btn btn-outline-secondary btn-sm">Sacar</a>
+                  <a href="#" class="btn btn-outline-secondary btn-sm">Depositar</a>
+                  <a href="#" class="btn btn-outline-secondary btn-sm">Tranferir</a>
                 </div>
               </div>
             </div>
             {% endfor %}
-          </div>
-        
-        <!-- <div class="row justify-content-center">
-            {% for pote in pote_do_banco%}
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="card-effect shadow p-1 m-2 mb-5 bg-body rounded">
-                        <div class="card-body text-center">
-                            <img class="mb-4" src="{% static 'icons/cerveja.png'%}" width="50%">
-                            <h4 class="card-text produto mb-3">{{pote.account_name}}</h4>
-                            <h4 class="card-text produto mb-3">{{pote.percent}}%</h4>
-                            <h5 class="card-title">Saldo</h5>
-                            <h4 class="card-text produto-preco">R${{pote.balance}}</h4>
-                            <a href="#" class="btn btn-primary m-1">Sacar</a>
-                            <a href="#" class="btn btn-primary m-1">Depositar</a>
-                            <a href="#" class="btn btn-primary m-1">Tranferir</a>
-                            <a href="#" class="btn btn-primary m-1">Extrato</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div> -->
-        <!-- </div> -->
-        <!-- <div class="row position-relative">
-            {% for pote, valor in potes.items%}
-            <div class="card col-2 card-effect shadow p-1 m-2 mb-5 bg-body rounded" style="width: 15rem;">
-                <div class="card-body text-center">
-                    <img class="mb-4" src="{% static 'icons/'%}{{valor.imagem}}" width="50%">
-                    <h4 class="card-text produto mb-3">{{pote}}</h4>
-                    <h5 class="card-title">Saldo</h5>
-                    <h4 class="card-text produto-preco">R${{valor.saldo}}</h4>
-                    <a href="#" class="btn btn-primary m-1">Sacar</a>
-                    <a href="#" class="btn btn-primary m-1">Depositar</a>
-                    <a href="#" class="btn btn-primary m-1">Tranferir</a>
-                    <a href="#" class="btn btn-primary m-1">Extrato</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div> -->
-
+          </div> -->
     <script src="{% static 'bootstrap/js/bootstrap.bundle.js' %}"></script>
 </body>
 </html>

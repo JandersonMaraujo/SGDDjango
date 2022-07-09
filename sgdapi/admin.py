@@ -14,6 +14,7 @@ class AccountHolderAdmin(admin.ModelAdmin):
     list_display_links = ('user_id', 'email')
     search_fields = ('email',)
     list_per_page = 20
+    list_filter = ('email',)
     ordering = ('user_id',)
 
 class TransactionAdmin(admin.ModelAdmin):

@@ -2,6 +2,7 @@ from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from sgdapi.models import Account, AccountHolder, Transaction
 from sgdapi.serializers import AccountSerializer, AccountHolderSerializer, TransactionSerializer, AllTransactionsForAnAccountHolderSerializer, AllTransactionsForAnAccountSerializer
+# from rest_framework.parsers import MultiPartParser, FormParser
 
 # Create your views here.
 
@@ -9,6 +10,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     """Listing all accounts"""
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+    # parser_classes = (MultiPartParser, FormParser) # apagar se não funciuonar o upload de imagens
 
 class AccountHolderViewSet(viewsets.ModelViewSet):
     """Listing all AccountHolders"""
