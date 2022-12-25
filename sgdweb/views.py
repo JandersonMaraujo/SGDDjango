@@ -6,10 +6,10 @@ from django.http import HttpResponse
 import requests
 # Create your views here.
 
-auth=('sgd', 'kdfhgkjfsue84535f_UGj47')
+auth=('janderson.araujo', 'protege123')
 
 def index(request):
-    print(request.user)
+    print(f'usuario logado: {request.user}')
     data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
     #print(data[-1])
     potes = {
@@ -51,6 +51,7 @@ def index(request):
     if not senha:
         return redirect('login')
 
+
     return render(request, 'index.html', {'pote_do_banco': pote_do_banco})
     # return render(request, 'index.html', {'potes': potes})
 
@@ -71,13 +72,14 @@ def new_account(request):
             "percent": request.POST.get('percentual'),
             "balance": 0,
             "account_name_real_life": request.POST.get('conta_fisica'),
-            "user": "janderson.araujo",
+            "user": request.user.id,
             # "image": request.FILES['imagem'],
             "active": True
             }
 
         r = requests.post(url='http://192.168.0.110:5001/accounts/', data=data, auth=auth, verify=False)
-        print(r.text)
+        # print(r.text)
+        # print(r.content)
         return redirect(to='index')
 
 def account_statement(request):

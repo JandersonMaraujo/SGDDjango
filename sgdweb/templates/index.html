@@ -46,7 +46,7 @@
             </div>
           </nav>
           <br>
-          <p><small>Olá, {{pote_do_banco.0.user}}!</small></p><br>
+          <p><small>Olá, {{ request.user.username }}.</small></p><br>
           <h5>{{ message }}</h5>
 
         <h5 class="card-title">Contas</h5>

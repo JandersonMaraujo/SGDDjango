@@ -12,7 +12,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class AccountHolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountHolder
-        exclude = ['password']
+        fields = '__all__'
 
     def validate(self, data):
         if not valid_name(data['first_name']):
