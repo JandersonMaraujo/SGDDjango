@@ -27,7 +27,7 @@ class AccountHolder(models.Model):
     city = models.CharField(max_length=30)
     state = models.CharField(max_length=2)
     phone = models.CharField(max_length=11)
-    prof_pic = models.ImageField(blank=True)
+    prof_pic = models.ImageField(upload_to='pictures/%Y/%m/%d/', max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
     active = models.BooleanField(default=True, null=True)

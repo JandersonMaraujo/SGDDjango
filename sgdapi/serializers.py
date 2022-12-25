@@ -15,12 +15,6 @@ class AccountHolderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        if not valid_name(data['first_name']):
-            raise serializers.ValidationError({'first_name': 'Do not incluse numbers in this field'})
-
-        if not valid_name(data['second_name']):
-            raise serializers.ValidationError({'second_name': 'Do not incluse numbers in this field'})
-
         if not valid_phone(data['phone']):
             raise serializers.ValidationError({'phone': 'Phone needs to follow the example: 11912345678'})
         
