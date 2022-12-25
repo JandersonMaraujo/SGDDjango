@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth import get_user_model
 
 # Create your models here.
 
@@ -11,12 +12,12 @@ class AccountHolder(models.Model):
         ('O', 'Outros')
     )
 
-    first_name = models.CharField(max_length=30, null=False)
-    user_id = models.CharField(max_length=40, primary_key=True)
-    password = models.CharField(max_length=200, null=False)
-    second_name = models.CharField(max_length=30)
+    # first_name = models.CharField(max_length=30, null=False)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    # password = models.CharField(max_length=200, null=False)
+    # second_name = models.CharField(max_length=30)
     nick_name = models.CharField(max_length=15, null=False)
-    email = models.EmailField(max_length=50)
+    # email = models.EmailField(max_length=50)
     birth_date = models.DateField(null=False)
     sex = models.CharField(max_length=1, choices=GENDER_OPTION, null=False, default='F')
     cep = models.CharField(max_length=8)

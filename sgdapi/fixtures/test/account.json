@@ -1,0 +1,70 @@
+[
+    {
+        "model": "adgapi.Account",
+        "pk": 1,
+        "fields": {
+            "account_name": "Liberdade Financeira",
+            "description": "Corresponde a 10% do dinheiro que entrar. Esse dinheiro deve ser guardado com o objetivo de alcançar sua liberdade financeira. Você pode utilizá-lo para gerar sua renda passiva (é a galinha dos ovos de ouro)",
+            "initials": "LFA",
+            "percent": 10,
+            "balance": 0,
+            "created_at": "2022-12-04 17:05:00",
+            "updated_at": "2022-12-04 17:05:00",
+            "account_name_real_life": "Conta Corrente Itaú",
+            "user": 1,
+            "image": "null",
+            "active": "true"
+        }
+    },
+    {
+        "model": "adgapi.Account",
+        "pk": 2,
+        "fields": {
+            "account_name": "Poupança de Longo Prazo",
+            "description": "Corresponde a 10% do dinheiro que entrar. Esse dinheiro é utilizado para atender objetivos de longo prazo(5%),  mas também pode ser uzado  para objetivos de curto prazo (5%). Neste caso foi considerado 5% de cada pote nessa mesma conta",
+            "initials": "PDLP",
+            "percent": 10,
+            "balance": 0,
+            "created_at": "2022-12-04 17:05:00",
+            "updated_at": "2022-12-04 17:05:00",
+            "account_name_real_life": "Conta Corrente Itaú",
+            "user": 1,
+            "image": "null",
+            "active": "true"
+        }
+    },
+    {
+        "model": "adgapi.Account",
+        "pk": 3,
+        "fields": {
+            "account_name": "Liberdade Financeira",
+            "description": "Corresponde a 10% do dinheiro que entrar. Esse dinheiro deve ser guardado com o objetivo de alcançar sua liberdade financeira. Você pode utilizá-lo para gerar sua renda passiva (é a galinha dos ovos de ouro)",
+            "initials": "LFA",
+            "percent": 10,
+            "balance": 0,
+            "created_at": "2022-12-04 17:05:00",
+            "updated_at": "2022-12-04 17:05:00",
+            "account_name_real_life": "Conta Corrente Itaú",
+            "user": 2,
+            "image": "null",
+            "active": "true"
+        }
+    },
+    {
+        "model": "adgapi.Account",
+        "pk": 4,
+        "fields": {
+            "account_name": "Poupança de Longo Prazo",
+            "description": "Corresponde a 10% do dinheiro que entrar. Esse dinheiro é utilizado para atender objetivos de longo prazo(5%),  mas também pode ser uzado  para objetivos de curto prazo (5%). Neste caso foi considerado 5% de cada pote nessa mesma conta",
+            "initials": "PDLP",
+            "percent": 10,
+            "balance": 0,
+            "created_at": "2022-12-04 17:05:00",
+            "updated_at": "2022-12-04 17:05:00",
+            "account_name_real_life": "Conta Corrente Itaú",
+            "user": 2,
+            "image": "null",
+            "active": "true"
+        }
+    }
+]

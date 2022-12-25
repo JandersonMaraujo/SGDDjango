@@ -14,11 +14,14 @@ from pathlib import Path
 import os
 import sys
 import mimetypes
+from dotenv import load_dotenv
+
+
 mimetypes.add_type("text/css", ".css", True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(os.path.join(BASE_DIR, 'deploy/.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -29,9 +32,7 @@ SECRET_KEY = 'django-insecure-90t7-&vm4kq4s%#((&^t$)ji54#=wpsmnn8sdx3%cg_0+9^iba
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '192.168.0.109',
-]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -44,11 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sgdapi',
+    'sgdweb',
     'rest_framework',
     'django_filters',
     'admin_honeypot',
     'drf_yasg',
-    'sgdweb',
 ]
 
 MIDDLEWARE = [
@@ -88,11 +89,11 @@ WSGI_APPLICATION = 'sgd.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sgd',
-        'USER': 'sgd-admin',
-        'PASSWORD': 'kdfhgkjfsue84535f_UGj47',
-        'HOST': '192.168.0.109',
-        'PORT': '5000',
+        'NAME': os.getenv('MARIADB_DATABASE'),
+        'USER': 'root',
+        'PASSWORD': os.getenv('MARIADB_ROOT_PASSWORD'),
+        'HOST': os.getenv('MARIA_DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 

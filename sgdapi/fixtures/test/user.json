@@ -1,0 +1,24 @@
+[
+    {
+        "model": "auth.User",
+        "pk": 1,
+        "fields": {
+            "username": "janderson.araujo",
+            "first_name": "Janderson",
+            "last_name": "Araujo",
+            "email": "janderson.araujo@123.com",
+            "password": "teste123"
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 2,
+        "fields": {
+            "username": "fulano.sobrenome",
+            "first_name": "Fulano",
+            "last_name": "Sobrenome",
+            "email": "fulano.sobrenome@123.com",
+            "password": "teste123"
+        }
+    }
+]

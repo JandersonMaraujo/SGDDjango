@@ -10,7 +10,11 @@ auth=('sgd', 'kdfhgkjfsue84535f_UGj47')
 
 def index(request):
     print(request.user)
+<<<<<<< HEAD
     data = requests.get(url='http://192.168.0.109:5001/accounts/', auth=auth, verify=False).json()
+=======
+    data = requests.get(url='http://192.168.0.110:8000/accounts/', auth=auth, verify=False).json()
+>>>>>>> 3f81cd6 (configuring project to use python 3.11, in addition to get settings more secure)
     #print(data[-1])
     potes = {
                 'Liberdade Financeira': {
@@ -42,7 +46,11 @@ def index(request):
     
 
     pote_do_banco = data
+<<<<<<< HEAD
     # pote_do_banco[1]['image'] = '"http://192.168.0.109:5001/media/liberdade-financeira.png"'
+=======
+    # pote_do_banco[1]['image'] = '"http://192.168.0.110:8000/media/liberdade-financeira.png"'
+>>>>>>> 3f81cd6 (configuring project to use python 3.11, in addition to get settings more secure)
     #print(pote_do_banco)
 
     saldos = [100, 200, 300, 400, 500, 600]
@@ -76,12 +84,20 @@ def new_account(request):
             "active": True
             }
 
+<<<<<<< HEAD
         r = requests.post(url='http://192.168.0.109:5001/accounts/', data=data, auth=auth, verify=False)
+=======
+        r = requests.post(url='http://192.168.0.110:8000/accounts/', data=data, auth=auth, verify=False)
+>>>>>>> 3f81cd6 (configuring project to use python 3.11, in addition to get settings more secure)
         print(r.text)
         return redirect(to='index')
 
 def account_statement(request):
+<<<<<<< HEAD
     data = requests.get(url='http://192.168.0.109:5001/account/59/transactions/', auth=auth, verify=False).json()
+=======
+    data = requests.get(url='http://192.168.0.110:8000/account/59/transactions/', auth=auth, verify=False).json()
+>>>>>>> 3f81cd6 (configuring project to use python 3.11, in addition to get settings more secure)
     return render(request, 'account_statement.html', {'data': data})
 
 def deposit(request):
@@ -95,7 +111,11 @@ def trasnfer(request):
 
 
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
+<<<<<<< HEAD
     db_data = requests.get(url='http://192.168.0.109:5001/accounts/', auth=auth, verify=False).json()
+=======
+    db_data = requests.get(url='http://192.168.0.110:8000/accounts/', auth=auth, verify=False).json()
+>>>>>>> 3f81cd6 (configuring project to use python 3.11, in addition to get settings more secure)
 
     standard_accounts = ['Liberdade Financeira', 'Poupança de Longo Prazo', 'Educação', 'Necessidades', 'Diversão', 'Doações']
     message = []
@@ -110,7 +130,11 @@ def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwar
     
     for account in data:
         if account['account_name'] in standard_accounts:
+<<<<<<< HEAD
             requests.post(url='http://192.168.0.109:5001/accounts/', data=account, auth=auth, verify=False)
+=======
+            requests.post(url='http://192.168.0.110:8000/accounts/', data=account, auth=auth, verify=False)
+>>>>>>> 3f81cd6 (configuring project to use python 3.11, in addition to get settings more secure)
     
     return redirect('index')
     

@@ -10,11 +10,19 @@ class AccountAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 class AccountHolderAdmin(admin.ModelAdmin):
+<<<<<<< HEAD
     list_display = ('user_id', 'password', 'first_name', 'second_name', 'nick_name', 'email', 'birth_date', 'sex', 'cep', 'street', 'number', 'district', 'city', 'state', 'phone', 'created_at', 'updated_at', 'active')
     list_display_links = ('user_id', 'email')
     search_fields = ('email',)
     list_per_page = 20
     list_filter = ('email',)
+=======
+    list_display = ('user_id', 'nick_name', 'birth_date', 'sex', 'cep', 'street', 'number', 'district', 'city', 'state', 'phone', 'created_at', 'updated_at', 'active')
+    list_display_links = ('user_id', )
+    search_fields = ('user_id',)
+    list_per_page = 20
+    list_filter = ('user_id',)
+>>>>>>> 3f81cd6 (configuring project to use python 3.11, in addition to get settings more secure)
     ordering = ('user_id',)
 
 class TransactionAdmin(admin.ModelAdmin):
