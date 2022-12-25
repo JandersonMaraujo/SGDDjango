@@ -7,3 +7,4 @@ sgdapi/test/__pycache__/
 venv/
 *venv*
 *__pycache__*
+data

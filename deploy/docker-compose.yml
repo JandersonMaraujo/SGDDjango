@@ -12,12 +12,34 @@ services:
       MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ../volumes/db/data:/var/lib/mysql
     ports:
       - ${DB_PORT}:3306
     expose:
       - "3306"
     networks:
       - sgd-dev-net
+
+  app-sgd:
+    image: sgd:latest
+    build:
+      context: ../
+      # args:
+      #   - 
+      dockerfile: ./deploy/app/Dockerfile
+    container_name: app-sgd
+    restart: always
+    # env_file:
+    #   - 
+    volumes:
+      - ../:/srv/app/
+    ports:
+      - ${SGD_PORT}:5001
+    expose:
+      - 5001
+    networks:
+    - sgd-dev-net
 
 networks:
   sgd-dev-net:

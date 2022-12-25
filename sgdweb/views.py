@@ -10,7 +10,7 @@ auth=('sgd', 'kdfhgkjfsue84535f_UGj47')
 
 def index(request):
     print(request.user)
-    data = requests.get(url='http://192.168.0.110:8000/accounts/', auth=auth, verify=False).json()
+    data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
     #print(data[-1])
     potes = {
                 'Liberdade Financeira': {
@@ -42,7 +42,7 @@ def index(request):
     
 
     pote_do_banco = data
-    # pote_do_banco[1]['image'] = '"http://192.168.0.110:8000/media/liberdade-financeira.png"'
+    # pote_do_banco[1]['image'] = '"http://192.168.0.110:5001/media/liberdade-financeira.png"'
     #print(pote_do_banco)
 
     saldos = [100, 200, 300, 400, 500, 600]
@@ -76,12 +76,12 @@ def new_account(request):
             "active": True
             }
 
-        r = requests.post(url='http://192.168.0.110:8000/accounts/', data=data, auth=auth, verify=False)
+        r = requests.post(url='http://192.168.0.110:5001/accounts/', data=data, auth=auth, verify=False)
         print(r.text)
         return redirect(to='index')
 
 def account_statement(request):
-    data = requests.get(url='http://192.168.0.110:8000/account/59/transactions/', auth=auth, verify=False).json()
+    data = requests.get(url='http://192.168.0.110:5001/account/59/transactions/', auth=auth, verify=False).json()
     return render(request, 'account_statement.html', {'data': data})
 
 def deposit(request):
@@ -95,7 +95,7 @@ def trasnfer(request):
 
 
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
-    db_data = requests.get(url='http://192.168.0.110:8000/accounts/', auth=auth, verify=False).json()
+    db_data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
 
     standard_accounts = ['Liberdade Financeira', 'Poupança de Longo Prazo', 'Educação', 'Necessidades', 'Diversão', 'Doações']
     message = []
@@ -110,7 +110,7 @@ def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwar
     
     for account in data:
         if account['account_name'] in standard_accounts:
-            requests.post(url='http://192.168.0.110:8000/accounts/', data=account, auth=auth, verify=False)
+            requests.post(url='http://192.168.0.110:5001/accounts/', data=account, auth=auth, verify=False)
     
     return redirect('index')
     
