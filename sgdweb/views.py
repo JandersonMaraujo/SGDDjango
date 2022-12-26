@@ -4,12 +4,15 @@ from wsgiref import headers
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 import requests
+from sgdapi.models import AccountHolder
 # Create your views here.
 
 auth=('janderson.araujo', 'protege123')
 
 def index(request):
     print(f'usuario logado: {request.user}')
+    a = AccountHolder.objects.filter(user=request.user).first()
+
     data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
     #print(data[-1])
     potes = {
@@ -52,7 +55,12 @@ def index(request):
         return redirect('login')
 
 
-    return render(request, 'index.html', {'pote_do_banco': pote_do_banco})
+    return render(request, 'index.html',
+                                        {
+                                            'pote_do_banco': pote_do_banco,
+                                            'account_holder': a.prof_pic
+                                        }
+            )
     # return render(request, 'index.html', {'potes': potes})
 
 def login(request):
