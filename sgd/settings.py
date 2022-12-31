@@ -167,4 +167,4 @@ if  'test' in sys.argv:
             }
         }
 
-# AUTH_USER_MODEL = 'sgdapi.AccountHolder'
+AUTH_USER_MODEL = 'sgdapi.AccountHolder'

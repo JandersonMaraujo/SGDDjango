@@ -2,6 +2,7 @@ from pkg_resources import require
 from rest_framework import serializers
 from sgdapi.models import Account, AccountHolder, Transaction
 from sgdapi.validators import *
+from django.contrib.auth import get_user_model
 
 class AccountSerializer(serializers.ModelSerializer):
     # image = serializers.ImageField(required=False) # tirara se o upload de imagens não funcionar
@@ -11,7 +12,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class AccountHolderSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AccountHolder
+        model = get_user_model()
         fields = '__all__'
 
     def validate(self, data):

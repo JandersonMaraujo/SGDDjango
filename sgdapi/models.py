@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 
 
 
@@ -8,7 +9,7 @@ from django.contrib.auth import get_user_model
 # IMPLEMENTAR Substituting a custom User model https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#substituting-a-custom-user-model  #
 #################################################################################################################################################
 
-class AccountHolder(models.Model):
+class AccountHolder(AbstractUser):
     GENDER_OPTION = (
         ('F', 'Feminino'),
         ('M', 'Masculino'),
@@ -16,27 +17,27 @@ class AccountHolder(models.Model):
     )
 
     # first_name = models.CharField(max_length=30, null=False)
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    # user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     # password = models.CharField(max_length=200, null=False)
     # second_name = models.CharField(max_length=30)
     nick_name = models.CharField(max_length=15, null=False)
     # email = models.EmailField(max_length=50)
-    birth_date = models.DateField(null=False)
-    sex = models.CharField(max_length=1, choices=GENDER_OPTION, null=False, default='F')
-    cep = models.CharField(max_length=8)
-    street = models.CharField(max_length=200)
-    number = models.IntegerField()
-    district = models.CharField(max_length=50)
-    city = models.CharField(max_length=30)
-    state = models.CharField(max_length=2)
-    phone = models.CharField(max_length=11)
+    birth_date = models.DateField(null=True)
+    sex = models.CharField(max_length=1, choices=GENDER_OPTION, null=True, default='F')
+    cep = models.CharField(max_length=8, null=True)
+    street = models.CharField(max_length=200, null=True)
+    number = models.IntegerField(null=True)
+    district = models.CharField(max_length=50, null=True)
+    city = models.CharField(max_length=30, null=True)
+    state = models.CharField(max_length=2, null=True)
+    phone = models.CharField(max_length=11, null=True)
     prof_pic = models.ImageField(upload_to='pictures/%Y/%m/%d/', max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
-    active = models.BooleanField(default=True, null=True)
+    active = models.BooleanField(default=True, null=False)
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
 
 class Account(models.Model):
@@ -52,6 +53,9 @@ class Account(models.Model):
     account_name_real_life = models.CharField(max_length=50)
     image = models.ImageField(blank=True)
     active = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.account_name
 
 class Transaction(models.Model):
     DEPOSITO = 'D'

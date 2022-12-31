@@ -30,7 +30,7 @@
                     </ul>
                 </div>
                 <p><small>Olá, {{ request.user.username }}.</small></p><br>
-                <img src="{{account_holder.url}}" width="50px" height=auto border=2 style="border:2px solid #1b6b6f; margin:15px; border-radius: 50%">
+                <img src="{{account_holder_pic.url}}" width="50px" height=auto border=2 style="border:2px solid #1b6b6f; margin:15px; border-radius: 50%">
             </div>
         </nav>
         <br>
@@ -49,7 +49,7 @@
                             <p class="card-text produto-preco">Saldo {{pote.balance}}</p>
                             <a href="{% url 'account_statement' %}" class="btn btn-outline-secondary btn-sm">Extrato</a>
                             <a href="{% url 'withdraw' %}" class="btn btn-outline-secondary btn-sm">Sacar</a>
-                            <a href="{% url 'deposit' %}" class="btn btn-outline-secondary btn-sm">Depositar</a>
+                            <a href="{% url 'deposit' account_id=pote.id %}" class="btn btn-outline-secondary btn-sm">Depositar</a>
                             <a href="{% url 'transfer' %}" class="btn btn-outline-secondary btn-sm">Tranferir</a>
                         </div>
                     </div>

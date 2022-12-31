@@ -8,7 +8,7 @@ urlpatterns = [
     path('new-account/', views.new_account, name='new_account'),
     path('creates-standard-accouts/', views.creates_standard_accouts, name='creates_standard_accouts'),
     path('account_statement/', views.account_statement, name='account_statement'),
-    path('deposit/', views.deposit, name='deposit'),
+    path('deposit/<int:account_id>/', views.deposit, name='deposit'),
     path('withdraw/', views.withdraw, name='withdraw'),
     path('transfer/', views.trasnfer, name='transfer')
 ]

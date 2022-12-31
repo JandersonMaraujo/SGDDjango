@@ -54,7 +54,7 @@
         <div class="row justify-content-center">
             <div class="card text-darkshadow bg-light mb-2 col12 col-md-6 col-lg-4 shadow p-3 mb-5 rounded">
                 <h2 align="center">Depósito</h2>
-                <form action="{% url 'deposit' %}" method="post" enctype="multipart/form-data">
+                <form action="{% url 'deposit' account_id=account_id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                 <fieldset>
                     <div class="form-group input-group-sm mb-3">

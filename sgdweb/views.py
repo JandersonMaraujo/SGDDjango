@@ -8,10 +8,11 @@ from sgdapi.models import AccountHolder
 # Create your views here.
 
 auth=('janderson.araujo', 'protege123')
+server = 'http://192.168.0.110:5001'
 
 def index(request):
     print(f'usuario logado: {request.user} - id: {request.user.id}')
-    a = AccountHolder.objects.filter(user=request.user).first()
+    # a = AccountHolder.objects.filter(user=request.user).first()
 
     data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
     #print(data[-1])
@@ -58,7 +59,7 @@ def index(request):
     return render(request, 'index.html',
                                         {
                                             'pote_do_banco': pote_do_banco,
-                                            'account_holder': a.prof_pic
+                                            'account_holder_pic': request.user.prof_pic
                                         }
             )
     # return render(request, 'index.html', {'potes': potes})
@@ -80,7 +81,7 @@ def new_account(request):
             "percent": request.POST.get('percentual'),
             "balance": 0,
             "account_name_real_life": request.POST.get('conta_fisica'),
-            "user": request.user.accountholder.id,
+            "user": request.user.id,
             # "image": request.FILES['imagem'],
             "active": True
             }
@@ -94,8 +95,19 @@ def account_statement(request):
     data = requests.get(url='http://192.168.0.110:5001/account/59/transactions/', auth=auth, verify=False).json()
     return render(request, 'account_statement.html', {'data': data})
 
-def deposit(request):
-    return render(request, 'deposit.html')
+def deposit(request, account_id: int):
+    if request.POST:
+        amount = request.POST.get('valor')
+        description = request.POST.get('descricao')
+        data = {
+            "description": "Conta destinada a investimento de longo prazo",
+            "balance": 0,
+        }
+        response = requests.patch(url=server + '/accounts/' + str(account_id) + '/', data={},auth=auth, verify=False)
+        print(response.json())
+        return HttpResponse(f'amout: {amount} - Description: {description}')
+
+    return render(request, 'deposit.html', context={'account_id': account_id})
 
 def withdraw(request):
     return render(request, 'withdraw.html')

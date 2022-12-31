@@ -16,7 +16,7 @@ class AccountHolderViewSet(viewsets.ModelViewSet):
     """Listing all AccountHolders"""
     queryset = AccountHolder.objects.all()
     serializer_class = AccountHolderSerializer
-    filterset_fields = ['user_id'] # I had to install django-filter to be allowed to use it. This row means i can do something like: http://192.168.0.109:5001/account-holders?user_id=janderson.araujo&email=blablabla
+    filterset_fields = ['username'] # I had to install django-filter to be allowed to use it. This row means i can do something like: http://192.168.0.109:5001/account-holders?user_id=janderson.araujo&email=blablabla
     lookup_value_regex = '[^/]+' # issue abertta. As novas versões do django rest estão excluindo os caracteres "/" e ".". Fui orientado a escrever essa linha para que funcione o janderson.araujo como id de pesquisa na url
 
     def create(self, request): # rewriting the create method in order to send to header the key location with the uri/url for future uses (create doesnt do this by default).
