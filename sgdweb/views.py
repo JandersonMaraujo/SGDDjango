@@ -10,7 +10,7 @@ from sgdapi.models import AccountHolder
 auth=('janderson.araujo', 'protege123')
 
 def index(request):
-    print(f'usuario logado: {request.user}')
+    print(f'usuario logado: {request.user} - id: {request.user.id}')
     a = AccountHolder.objects.filter(user=request.user).first()
 
     data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
@@ -80,14 +80,14 @@ def new_account(request):
             "percent": request.POST.get('percentual'),
             "balance": 0,
             "account_name_real_life": request.POST.get('conta_fisica'),
-            "user": request.user.id,
+            "user": request.user.accountholder.id,
             # "image": request.FILES['imagem'],
             "active": True
             }
 
         r = requests.post(url='http://192.168.0.110:5001/accounts/', data=data, auth=auth, verify=False)
         # print(r.text)
-        # print(r.content)
+        print(r.content)
         return redirect(to='index')
 
 def account_statement(request):

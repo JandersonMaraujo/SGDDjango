@@ -2,8 +2,11 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 
-# Create your models here.
 
+
+#################################################################################################################################################
+# IMPLEMENTAR Substituting a custom User model https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#substituting-a-custom-user-model  #
+#################################################################################################################################################
 
 class AccountHolder(models.Model):
     GENDER_OPTION = (
