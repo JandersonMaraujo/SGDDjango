@@ -1,10 +1,10 @@
 from curses import has_key
-import re
+from datetime import datetime
 from wsgiref import headers
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 import requests
-from sgdapi.models import AccountHolder
+from sgdapi.models import AccountHolder, Account
 # Create your views here.
 
 auth=('janderson.araujo', 'protege123')
@@ -14,7 +14,7 @@ def index(request):
     print(f'usuario logado: {request.user} - id: {request.user.id}')
     # a = AccountHolder.objects.filter(user=request.user).first()
 
-    data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
+    data = requests.get(url='http://192.168.0.110:5001/api/accounts/', auth=auth, verify=False).json()
     #print(data[-1])
     potes = {
                 'Liberdade Financeira': {
@@ -44,9 +44,7 @@ def index(request):
     }
 
     
-
-    pote_do_banco = data
-    # pote_do_banco[1]['image'] = '"http://192.168.0.110:5001/media/liberdade-financeira.png"'
+    # pote_do_banco[1]['image'] = '"http://192.168.0.110:5001/api/apimedia/liberdade-financeira.png"'
     #print(pote_do_banco)
 
     saldos = [100, 200, 300, 400, 500, 600]
@@ -55,10 +53,9 @@ def index(request):
     if not senha:
         return redirect('login')
 
-
     return render(request, 'index.html',
                                         {
-                                            'pote_do_banco': pote_do_banco,
+                                            'pote_do_banco': data,
                                             'account_holder_pic': request.user.prof_pic
                                         }
             )
@@ -86,38 +83,92 @@ def new_account(request):
             "active": True
             }
 
-        r = requests.post(url='http://192.168.0.110:5001/accounts/', data=data, auth=auth, verify=False)
+        r = requests.post(url='http://192.168.0.110:5001/api/accounts/', data=data, auth=auth, verify=False)
         # print(r.text)
         print(r.content)
         return redirect(to='index')
 
-def account_statement(request):
-    data = requests.get(url='http://192.168.0.110:5001/account/59/transactions/', auth=auth, verify=False).json()
+def account_statement(request, account_id: int):
+    data = requests.get(url='http://192.168.0.110:5001/api/account/' + str(account_id) + '/transactions/', auth=auth, verify=False).json()
+    
+    for i in data:
+        i['created_at'] = datetime.strptime(i['created_at'], '%Y-%m-%d %H:%M:%S')
+
     return render(request, 'account_statement.html', {'data': data})
 
 def deposit(request, account_id: int):
     if request.POST:
         amount = request.POST.get('valor')
         description = request.POST.get('descricao')
-        data = {
-            "description": "Conta destinada a investimento de longo prazo",
-            "balance": 0,
+
+        transaction_data = {
+            "transaction_type": "D",
+            "description": description,
+            "status": "Success",
+            "amount": amount,
+            "send_to_user": 1,
+            "account": account_id,
+            "send_to_account": account_id
         }
-        response = requests.patch(url=server + '/accounts/' + str(account_id) + '/', data={},auth=auth, verify=False)
-        print(response.json())
-        return HttpResponse(f'amout: {amount} - Description: {description}')
+
+        transaction_response = requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
+
+        if transaction_response.status_code != 201:
+            return redirect('deposit', account_id=account_id)
+
+        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
+        current_balance = account_response.json().get('balance')
+
+        deposit_data = {
+            "balance": float(current_balance) + float(amount),
+        }
+
+        requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=deposit_data, auth=auth, verify=False)
+        return redirect(to='index')
 
     return render(request, 'deposit.html', context={'account_id': account_id})
 
-def withdraw(request):
-    return render(request, 'withdraw.html')
+def withdraw(request, account_id: int):
+    if request.POST:
+        amount = request.POST.get('amount')
+        description = request.POST.get('description')
+        credit = request.POST.get('credit') == 'on'
+
+        transaction_data = {
+            "transaction_type": "S",
+            "description": description,
+            "status": "Success",
+            "amount": amount,
+            "send_to_user": request.user.id,
+            "account": account_id,
+            "send_to_account": account_id,
+            "credit": credit
+        }
+
+        transaction_response = requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
+
+        if transaction_response.status_code != 201:
+            return redirect('withdraw', account_id=account_id)
+
+
+        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
+        current_balance = account_response.json().get('balance')
+
+        withdraw_data = {
+            "balance": float(current_balance) - float(amount),
+        }
+
+        requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=withdraw_data, auth=auth, verify=False)
+        return redirect(to='index')
+
+    return render(request, 'withdraw.html', {'account_id': account_id})
 
 def trasnfer(request):
     return render(request, 'transfer.html')
 
 
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
-    db_data = requests.get(url='http://192.168.0.110:5001/accounts/', auth=auth, verify=False).json()
+    db_data = requests.get(url='http://192.168.0.110:5001/api/accounts/', auth=auth, verify=False).json()
 
     standard_accounts = ['Liberdade Financeira', 'Poupança de Longo Prazo', 'Educação', 'Necessidades', 'Diversão', 'Doações']
     message = []
@@ -132,7 +183,7 @@ def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwar
     
     for account in data:
         if account['account_name'] in standard_accounts:
-            requests.post(url='http://192.168.0.110:5001/accounts/', data=account, auth=auth, verify=False)
+            requests.post(url='http://192.168.0.110:5001/api/accounts/', data=account, auth=auth, verify=False)
     
     return redirect('index')
     

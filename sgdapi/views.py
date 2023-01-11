@@ -34,6 +34,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     filterset_fields = ['created_at',]
 
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
 class AllTransactionsForAnAccountHolderView(generics.ListAPIView):
     """Listing all transactions for an account holder"""
     def get_queryset(self):

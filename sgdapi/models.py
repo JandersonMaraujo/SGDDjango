@@ -74,8 +74,10 @@ class Transaction(models.Model):
     send_to_user = models.ForeignKey(to=AccountHolder, related_name='send_to_user', on_delete=models.CASCADE)
     account = models.ForeignKey(to=Account, on_delete=models.CASCADE)
     transaction_type = models.CharField(max_length=2, choices=TRANSACTION_OPTION, null=False, default='D')
+    credit = models.BooleanField(null=False, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField()
     send_to_account = models.ForeignKey(to=Account, related_name='send_to_account', on_delete=models.CASCADE)
     status = models.CharField(max_length=10, null=True)
+    amount = models.DecimalField(max_digits=19, decimal_places=4)
     

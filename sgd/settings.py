@@ -44,11 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sgdapi',
-    'sgdweb',
     'rest_framework',
     'django_filters',
     'admin_honeypot',
+    'sgdapi',
+    'sgdweb',
     'drf_yasg',
 ]
 
@@ -126,7 +126,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -154,7 +154,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.DjangoModelPermissions'
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'] # I don't need to write the property 'authentication_classes = [BasicAuthentication]' on view anymore
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'], # I don't need to write the property 'authentication_classes = [BasicAuthentication]' on view anymore
+    "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
 }
 
 if  'test' in sys.argv:

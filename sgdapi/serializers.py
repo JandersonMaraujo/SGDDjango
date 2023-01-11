@@ -25,6 +25,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
+        read_only_fields = ['user',]
 
 class AllTransactionsForAnAccountHolderSerializer(serializers.ModelSerializer):
     first_name = serializers.ReadOnlyField(source='account.user.first_name') # Não é o campo do model, mas o campo de Transaction (account), que, por aqui, pode ser navegado, pois tem referência do model Account
@@ -45,13 +46,13 @@ class AllTransactionsForAnAccountSerializer(serializers.ModelSerializer):
     transaction_type = serializers.SerializerMethodField()
     class Meta:
         model = Transaction
-        fields = ['account', 'account_name', 'send_to_account', 'send_to_account_name', 'account_holder', 'send_to_account_holder', 'transaction_type','created_at', 'description', 'status']
+        fields = ['account', 'account_name', 'send_to_account', 'send_to_account_name', 'account_holder', 'send_to_account_holder', 'transaction_type','created_at', 'description', 'status', 'created_at', 'amount']
 
     def get_account_holder(self, obj):
-        return f'{obj.user.first_name} {obj.user.second_name}'
+        return f'{obj.user.first_name} {obj.user.last_name}'
     
     def get_send_to_account_holder(self, obj):
-        return f'{obj.user.first_name} {obj.user.second_name}'
+        return f'{obj.user.first_name} {obj.user.last_name}'
 
     def get_transaction_type(self, obj):
         return obj.get_transaction_type_display()

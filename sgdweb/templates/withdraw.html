@@ -54,21 +54,21 @@
         <div class="row justify-content-center">
             <div class="card text-darkshadow bg-light mb-2 col12 col-md-6 col-lg-4 shadow p-3 mb-5 rounded">
                 <h2 align="center">Saque</h2>
-                <form action="{% url 'withdraw' %}" method="post" enctype="multipart/form-data">
+                <form action="{% url 'withdraw' account_id=account_id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                 <fieldset>
                     <div class="form-group input-group-sm mb-3">
                         <label for="valor"><small>Valor</small></label>
-                        <input type="number" id="valor" name="valor" class="form-control col-lg-8" step="any" placeholder="Valor a ser depositado">
+                        <input type="number" id="valor" name="amount" class="form-control col-lg-8" step="any" placeholder="Valor a ser depositado">
                     </div>
                     <div class="form-group input-group-sm mb-3">
                         <label for="descricao"><small>Descrição</small></label>
-                        <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Descreva o depósito (opcional)">
+                        <input type="text" id="descricao" name="description" class="form-control" placeholder="Descreva o depósito (opcional)">
                     </div>
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="credit">
                         <label class="form-check-label" for="flexSwitchCheckDefault"><small>crédito</small></label>
-                      </div>
+                    </div>
                     <button type="submit" class="btn btn-outline-secondary btn-sm">Sacar</button>
                 </fieldset>
                 </form>
