@@ -2,37 +2,7 @@
 {% include 'partials/_header.html' %}
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                     
-                <a class="navbar-brand" href="#"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                  
-                    <ul class="navbar-nav mb-1">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'new_account' %}">Criar conta</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'creates_standard_accouts' %}">Criar contas em massa</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Gráficos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-                <p><small>Olá, {{ request.user.username }}.</small></p><br>
-                <img src="{{account_holder_pic.url}}" width="50px" height=auto border=2 style="border:2px solid #1b6b6f; margin:15px; border-radius: 50%">
-            </div>
-        </nav>
+        {% include 'partials/_navbar.html' %}
         <br>
         <h5>{{ message }}</h5>
 
