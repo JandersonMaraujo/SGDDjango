@@ -1,6 +1,6 @@
 from pkg_resources import require
 from rest_framework import serializers
-from sgdapi.models import Account, AccountHolder, Transaction
+from sgdapi.models import Account, AccountHolder, Transaction, Log
 from sgdapi.validators import *
 from django.contrib.auth import get_user_model
 
@@ -13,11 +13,13 @@ class AccountSerializer(serializers.ModelSerializer):
 class AccountHolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = '__all__'
-
+        exclude = ['password']
+        # fields = ['id', 'user', 'description', 'initials', 'percent', 'balance', 'created_at', 'updated_at', 'account_name_real_life', 'image', 'active']
+    
     def validate(self, data):
-        if not valid_phone(data['phone']):
-            raise serializers.ValidationError({'phone': 'Phone needs to follow the example: 11912345678'})
+        if data.get('phone'):
+            if not valid_phone(data['phone']):
+                raise serializers.ValidationError({'phone': 'Phone needs to follow the example: 11912345678'})
         
         return data
 
@@ -56,3 +58,13 @@ class AllTransactionsForAnAccountSerializer(serializers.ModelSerializer):
 
     def get_transaction_type(self, obj):
         return obj.get_transaction_type_display()
+
+class LogUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email']
+
+class LogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Log
+        fields = '__all__'

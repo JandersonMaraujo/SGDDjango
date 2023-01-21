@@ -80,4 +80,16 @@ class Transaction(models.Model):
     send_to_account = models.ForeignKey(to=Account, related_name='send_to_account', on_delete=models.CASCADE)
     status = models.CharField(max_length=10, null=True)
     amount = models.DecimalField(max_digits=19, decimal_places=4)
+
+class Log(models.Model):
+    initiated_by = models.JSONField()
+    before = models.JSONField()
+    after = models.JSONField()
+    event = models.CharField(max_length=50)
+    ip = models.GenericIPAddressField()
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.event} at {self.created_at}'
+    
     
