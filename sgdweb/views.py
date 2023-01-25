@@ -182,6 +182,44 @@ def trasnfer(request):
         }
     )
 
+def edit_account(request, account_id, account_name, account_name_real_life, description, percent):
+    if request.method == 'GET':
+        return render(
+            request,
+            'edit_account.html',
+            context={
+                'account_id': account_id,
+                'account_name': account_name,
+                'account_name_real_life': account_name_real_life,
+                'description': description,
+                'percent': percent
+            }
+        )
+    
+    data = {
+        "account_name": request.POST.get('nome'),
+        "description": request.POST.get('descricao'),
+        "initials": get_initials_from_a_string(request.POST.get('nome')),
+        "percent": request.POST.get('percentual'),
+        "account_name_real_life": request.POST.get('conta_fisica'),
+    }
+
+    requests.patch(
+        'http://192.168.0.110:5001/api/accounts/' + str(account_id) + '/',
+        data,
+        auth=auth,
+        verify=False
+    )
+    return redirect('index')
+
+def delete_account(request, account_id):
+    requests.delete(
+        'http://192.168.0.110:5001/api/accounts/' + str(account_id),
+        auth=auth,
+        verify=False
+    )
+    return redirect('index')
+
 
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
     accounts_response = requests.get(url='http://192.168.0.110:5001/api/accounts/', auth=auth, verify=False).json()

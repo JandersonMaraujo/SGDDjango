@@ -17,6 +17,7 @@
                             <a href="{% url 'withdraw' account_id=pote.id %}" class="btn btn-outline-secondary btn-sm">Sacar</a>
                             <a href="{% url 'deposit' account_id=pote.id %}" class="btn btn-outline-secondary btn-sm">Depositar</a>
                             <a href="{% url 'transfer' %}" class="btn btn-outline-secondary btn-sm">Tranferir</a>
+                            <a href="{% url 'edit_account' account_id=pote.id account_name=pote.account_name account_name_real_life=pote.account_name_real_life description=pote.description percent=pote.percent %}" class="btn btn-outline-secondary btn-sm">Editar</a>
                         </div>
                     </div>
                 </div>
