@@ -18,8 +18,6 @@ def index(request):
 
     # pote_do_banco[1]['image'] = '"http://192.168.0.110:5001/api/apimedia/liberdade-financeira.png"'
     #print(pote_do_banco)
-
-    saldos = [100, 200, 300, 400, 500, 600]
     
     senha = 's'
     if not senha:
@@ -71,8 +69,14 @@ def new_account(request):
 def account_statement(request, account_id: int):
     data = requests.get(url='http://192.168.0.110:5001/api/account/' + str(account_id) + '/transactions/', auth=auth, verify=False).json()
     
+    date_list = []
     for i in data:
         i['created_at'] = datetime.strptime(i['created_at'], '%Y-%m-%d %H:%M:%S')
+        compacted_date = i['created_at'].strftime('%Y-%m-%d')
+        compacted_date = datetime.strptime(compacted_date, '%Y-%m-%d')
+
+        if compacted_date not in date_list:
+            date_list.append(compacted_date)
 
     return render(
         request,
@@ -80,7 +84,8 @@ def account_statement(request, account_id: int):
         {
             'data': data,
             'page': 'Extrato',
-            'account_holder_pic': request.user.prof_pic
+            'account_holder_pic': request.user.prof_pic,
+            'date_list': date_list
         }
     )
 
