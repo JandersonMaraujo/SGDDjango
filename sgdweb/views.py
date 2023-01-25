@@ -184,22 +184,22 @@ def trasnfer(request):
 
 
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
-    db_data = requests.get(url='http://192.168.0.110:5001/api/accounts/', auth=auth, verify=False).json()
+    accounts_response = requests.get(url='http://192.168.0.110:5001/api/accounts/', auth=auth, verify=False).json()
 
-    standard_accounts = ['Liberdade Financeira', 'Poupança de Longo Prazo', 'Educação', 'Necessidades', 'Diversão', 'Doações']
+    standar_account_list = ['Liberdade Financeira', 'Poupança de Longo Prazo', 'Educação', 'Necessidades', 'Diversão', 'Doações']
     message = []
 
-    for i in db_data:
-        if i.get('account_name') in standard_accounts:
-            standard_accounts.remove(i['account_name'])
+    for item in accounts_response:
+        if item.get('account_name') in standar_account_list:
+            standar_account_list.remove(i['account_name'])
             message.append(i['account_name'])
 
 
-    data = get_standard_accounts()
+    standar_account_dict = get_standard_accounts(request.user.id)
     
-    for account in data:
-        if account['account_name'] in standard_accounts:
-            requests.post(url='http://192.168.0.110:5001/api/accounts/', data=account, auth=auth, verify=False)
+    for account in standar_account_dict:
+        if account['account_name'] in standar_account_list:
+            r = requests.post(url='http://192.168.0.110:5001/api/accounts/', data=account, auth=auth, verify=False)
     
     return redirect('index')
     
@@ -216,7 +216,7 @@ def get_initials_from_a_string(sentence):
 
 
 
-def get_standard_accounts():
+def get_standard_accounts(user):
     data = [
             {
                 "account_name": 'Liberdade Financeira',
@@ -225,8 +225,8 @@ def get_standard_accounts():
                 "percent": 10,
                 "balance": 0,
                 "account_name_real_life": 'Conta Corrente Itaú',
-                "user": "janderson.araujo",
-                "image": None,
+                "user": user,
+                "image": '',
                 "active": True
             },
             {
@@ -236,8 +236,8 @@ def get_standard_accounts():
                 "percent": 10,
                 "balance": 0,
                 "account_name_real_life": 'Conta Corrente Itaú',
-                "user": "janderson.araujo",
-                "image": None,
+                "user": user,
+                "image": '',
                 "active": True
             },
             {
@@ -247,8 +247,8 @@ def get_standard_accounts():
                 "percent": 10,
                 "balance": 0,
                 "account_name_real_life": 'Conta Corrente Itaú',
-                "user": "janderson.araujo",
-                "image": None,
+                "user": user,
+                "image": '',
                 "active": True
             },
             {
@@ -258,8 +258,8 @@ def get_standard_accounts():
                 "percent": 55,
                 "balance": 0,
                 "account_name_real_life": 'Conta Corrente Itaú',
-                "user": "janderson.araujo",
-                "image": None,
+                "user": user,
+                "image": '',
                 "active": True
             },
             {
@@ -269,8 +269,8 @@ def get_standard_accounts():
                 "percent": 10,
                 "balance": 0,
                 "account_name_real_life": 'Conta Corrente Itaú',
-                "user": "janderson.araujo",
-                "image": None,
+                "user": user,
+                "image": '',
                 "active": True
             },
             {
@@ -280,8 +280,8 @@ def get_standard_accounts():
                 "percent": 5,
                 "balance": 0,
                 "account_name_real_life": 'Conta Corrente Itaú',
-                "user": "janderson.araujo",
-                "image": None,
+                "user": user,
+                "image": '',
                 "active": True
             }
     ]
