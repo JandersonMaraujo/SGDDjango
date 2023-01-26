@@ -94,6 +94,18 @@ def deposit(request, account_id: int):
         amount = request.POST.get('valor')
         description = request.POST.get('descricao')
 
+        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
+        current_balance = account_response.json().get('balance')
+        new_balance = float(current_balance) + float(amount)
+        deposit_data = {
+            "balance": new_balance,
+        }
+
+        account_response = requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=deposit_data, auth=auth, verify=False)
+
+        if account_response.status_code != 200:
+            return redirect('deposit', account_id=account_id)
+
         transaction_data = {
             "transaction_type": "D",
             "description": description,
@@ -101,22 +113,13 @@ def deposit(request, account_id: int):
             "amount": amount,
             "send_to_user": 1,
             "account": account_id,
-            "send_to_account": account_id
+            "send_to_account": account_id,
+            'balance': new_balance
         }
 
-        transaction_response = requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
+        requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
 
-        if transaction_response.status_code != 201:
-            return redirect('deposit', account_id=account_id)
 
-        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
-        current_balance = account_response.json().get('balance')
-
-        deposit_data = {
-            "balance": float(current_balance) + float(amount),
-        }
-
-        requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=deposit_data, auth=auth, verify=False)
         return redirect(to='index')
 
     return render(
@@ -135,6 +138,18 @@ def withdraw(request, account_id: int):
         description = request.POST.get('description')
         credit = request.POST.get('credit') == 'on'
 
+        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
+        current_balance = account_response.json().get('balance')
+        new_balance = float(current_balance) - float(amount)
+        withdraw_data = {
+            "balance": new_balance,
+        }
+        
+        account_reponse = requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=withdraw_data, auth=auth, verify=False)
+
+        if account_reponse.status_code != 200:
+            return redirect('withdraw', account_id=account_id)
+
         transaction_data = {
             "transaction_type": "S",
             "description": description,
@@ -143,23 +158,12 @@ def withdraw(request, account_id: int):
             "send_to_user": request.user.id,
             "account": account_id,
             "send_to_account": account_id,
-            "credit": credit
+            "credit": credit,
+            'balance': new_balance
         }
 
-        transaction_response = requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
-
-        if transaction_response.status_code != 201:
-            return redirect('withdraw', account_id=account_id)
-
-
-        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
-        current_balance = account_response.json().get('balance')
-
-        withdraw_data = {
-            "balance": float(current_balance) - float(amount),
-        }
-
-        requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=withdraw_data, auth=auth, verify=False)
+        r = requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
+        print(f'transação: {r.text}')
         return redirect(to='index')
 
     return render(
@@ -229,8 +233,8 @@ def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwar
 
     for item in accounts_response:
         if item.get('account_name') in standar_account_list:
-            standar_account_list.remove(i['account_name'])
-            message.append(i['account_name'])
+            standar_account_list.remove(item['account_name'])
+            message.append(item['account_name'])
 
 
     standar_account_dict = get_standard_accounts(request.user.id)

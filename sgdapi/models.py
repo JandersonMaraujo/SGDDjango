@@ -79,6 +79,7 @@ class Transaction(models.Model):
     description = models.TextField()
     send_to_account = models.ForeignKey(to=Account, related_name='send_to_account', on_delete=models.CASCADE)
     status = models.CharField(max_length=10, null=True)
+    balance = models.DecimalField(max_digits=19, decimal_places=4)
     amount = models.DecimalField(max_digits=19, decimal_places=4)
 
 class Log(models.Model):

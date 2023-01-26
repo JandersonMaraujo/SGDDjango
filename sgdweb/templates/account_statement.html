@@ -6,32 +6,21 @@
       {% comment %} <p><small>Olá, {{pote_do_banco.0.user}}!</small></p> {% endcomment %}
       <p><h4>Extrato</small></h4>
         {% for date in date_list %}
-          <div class="card bg-light border-secondary mb-3" style="width: 100%;">
+          <div class="card text-white bg-secondary border-secondary card-effect shadow mb-2 responsive-font-example" style="width: 100%;">
             <div class="card-header">{{ date|date:'d, F'}}</div>
           {% for i in data %}
               {% if i.created_at|date:'Y-m-d' == date|date:'Y-m-d' %}
-                <div class="card-body">
-                  <h5 class="card-title">{{ i.description}}</h5>
-                  <p class="card-text"><small>{{ i.transaction_type}}</small></p>
-                  <p class="card-text"><small>R${{ i.amount|floatformat:2}}</small></p>
+                <div class="card-body text-dark bg-light">
+                  <p class="card-text mb-0"><small>{{ i.description}}</small></p>
+                  <p class="card-text mb-0"><small>Tipo: {{ i.transaction_type}}</small></p>
+                  <p class="card-text mb-0"><small>Valor: R${{ i.amount|floatformat:2}}</small></p>
+                  <p class="card-text mb-0"><small><b>Saldo: R${{ i.balance|floatformat:2}}</b></small></p>
                 </div>
                 {% endif %}
                 {% comment %} {% if i.created_at|date:'Y-m-d' in date_list %}{% endif %} {% endcomment %}
                 {% endfor %}
               </div>
         {% endfor %}
-
-
-        {% comment %} {% for i in data %}
-          <div class="card bg-light mb-3" style="width: 100%;">
-            <div class="card-header">{{ i.created_at|date:'d, F'}}</div>
-            <div class="card-body">
-              <h5 class="card-title">{{ i.description}}</h5>
-              <p class="card-text"><small>{{ i.transaction_type}}</small></p>
-              <p class="card-text"><small>R${{ i.amount|floatformat:2}}</small></p>
-            </div>
-          </div>
-        {% endfor %} {% endcomment %}
     <script src="{% static 'bootstrap/js/bootstrap.bundle.js' %}"></script>
 </body>
 </html>
