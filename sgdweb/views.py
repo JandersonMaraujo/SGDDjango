@@ -5,16 +5,17 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 import requests
 from sgdapi.models import AccountHolder, Account
+from django.conf import settings
 # Create your views here.
 
 auth=('janderson.araujo', 'protege123')
-server = 'http://192.168.0.110:5001'
+server = settings.SERVER_NAME
 
 def index(request):
     print(f'usuario logado: {request.user} - id: {request.user.id}')
     # a = AccountHolder.objects.filter(user=request.user).first()
 
-    data = requests.get(url='http://192.168.0.110:5001/api/accounts/', auth=auth, verify=False).json()
+    data = requests.get(url=server + '/api/accounts/', auth=auth, verify=False).json()
 
     # pote_do_banco[1]['image'] = '"http://192.168.0.110:5001/api/apimedia/liberdade-financeira.png"'
     #print(pote_do_banco)
@@ -61,13 +62,13 @@ def new_account(request):
             "active": True
             }
 
-        r = requests.post(url='http://192.168.0.110:5001/api/accounts/', data=data, auth=auth, verify=False)
+        r = requests.post(url=server + '/api/accounts/', data=data, auth=auth, verify=False)
         # print(r.text)
         print(r.content)
         return redirect(to='index')
 
 def account_statement(request, account_id: int):
-    data = requests.get(url='http://192.168.0.110:5001/api/account/' + str(account_id) + '/transactions/', auth=auth, verify=False).json()
+    data = requests.get(url=server + '/api/account/' + str(account_id) + '/transactions/', auth=auth, verify=False).json()
     
     date_list = []
     for i in data:
@@ -209,7 +210,7 @@ def edit_account(request, account_id, account_name, account_name_real_life, desc
     }
 
     requests.patch(
-        'http://192.168.0.110:5001/api/accounts/' + str(account_id) + '/',
+        server + '/api/accounts/' + str(account_id) + '/',
         data,
         auth=auth,
         verify=False
@@ -218,7 +219,7 @@ def edit_account(request, account_id, account_name, account_name_real_life, desc
 
 def delete_account(request, account_id):
     requests.delete(
-        'http://192.168.0.110:5001/api/accounts/' + str(account_id),
+        server + '/api/accounts/' + str(account_id),
         auth=auth,
         verify=False
     )
@@ -226,7 +227,7 @@ def delete_account(request, account_id):
 
 
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
-    accounts_response = requests.get(url='http://192.168.0.110:5001/api/accounts/', auth=auth, verify=False).json()
+    accounts_response = requests.get(url=server + '/api/accounts/', auth=auth, verify=False).json()
 
     standar_account_list = ['Liberdade Financeira', 'Poupança de Longo Prazo', 'Educação', 'Necessidades', 'Diversão', 'Doações']
     message = []
@@ -241,7 +242,7 @@ def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwar
     
     for account in standar_account_dict:
         if account['account_name'] in standar_account_list:
-            r = requests.post(url='http://192.168.0.110:5001/api/accounts/', data=account, auth=auth, verify=False)
+            r = requests.post(url=server + '/api/accounts/', data=account, auth=auth, verify=False)
     
     return redirect('index')
     
