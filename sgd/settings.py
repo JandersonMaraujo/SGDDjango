@@ -34,6 +34,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
+SERVER_NAME = os.getenv('SERVER_NAME')
+
 
 # Application definition
 

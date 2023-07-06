@@ -15,8 +15,22 @@
                 <fieldset>
                     <div class="form-group input-group-sm mb-3">
                         <label for="valor"><small>Valor</small></label>
-                        <input type="number" id="valor" name="valor" class="form-control col-lg-8" step="any" placeholder="Valor a ser depositado">
+                        <input type="number" step="0.10" id="valor" name="valor" class="form-control col-lg-8" step="any" placeholder="Valor a ser depositado">
                     </div>
+                    <label for="descricao"><small>Conta física: Conta xpto</small></label>
+                    {% comment %} <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
+                        <option selected>Selecione uma conta física</option>
+                        <option value="1">Corrente Bradesco</option>
+                        <option value="2">Poupança Bradesco</option>
+                        <option value="3">Corrente Inter</option>
+                        <option value="4">Poupança Inter</option>
+                        <option value="5">Corrente Itaú</option>
+                        <option value="6">Poupança Itaú</option>
+                        <option value="7">Corrente Nubank</option>
+                        <option value="8">Poupança Nubank</option>
+                        <option value="9">Corrente C6</option>
+                        <option value="10">Poupança C6</option>
+                      </select> {% endcomment %}
                     <div class="form-group input-group-sm mb-3">
                         <label for="descricao"><small>Descrição</small></label>
                         <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Descreva o depósito (opcional)">
