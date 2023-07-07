@@ -6,11 +6,14 @@ from django.http import HttpResponse
 import requests
 from sgdapi.models import AccountHolder, Account
 from django.conf import settings
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 auth=('janderson.araujo', 'protege123')
 server = settings.SERVER_NAME
 
+@login_required(login_url='login/')
 def index(request):
     print(f'usuario logado: {request.user} - id: {request.user.id}')
     # a = AccountHolder.objects.filter(user=request.user).first()
@@ -33,9 +36,25 @@ def index(request):
             )
     # return render(request, 'index.html', {'potes': potes})
 
-def login(request):
+def log_in(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            login(request, user=user)
+            return redirect('index')
+        return render(request, 'login.html')
+    
     return render(request, 'login.html')
 
+def log_out(request):
+    logout(request)
+    return redirect('login')
+
+@login_required(login_url='login/')
 def new_account(request):
     if request.method == 'GET':
         return render(
@@ -66,7 +85,8 @@ def new_account(request):
         # print(r.text)
         print(r.content)
         return redirect(to='index')
-
+    
+@login_required(login_url='login/')
 def account_statement(request, account_id: int):
     data = requests.get(url=server + '/api/account/' + str(account_id) + '/transactions/', auth=auth, verify=False).json()
     
@@ -90,6 +110,7 @@ def account_statement(request, account_id: int):
         }
     )
 
+@login_required(login_url='login/')
 def deposit(request, account_id: int):
     if request.POST:
         amount = request.POST.get('valor')
@@ -133,6 +154,7 @@ def deposit(request, account_id: int):
             }
         )
 
+@login_required(login_url='login/')
 def withdraw(request, account_id: int):
     if request.POST:
         amount = request.POST.get('amount')
@@ -177,6 +199,7 @@ def withdraw(request, account_id: int):
         }
     )
 
+@login_required(login_url='login/')
 def trasnfer(request):
     return render(
         request,
@@ -187,6 +210,7 @@ def trasnfer(request):
         }
     )
 
+@login_required(login_url='login/')
 def edit_account(request, account_id, account_name, account_name_real_life, description, percent):
     if request.method == 'GET':
         return render(
@@ -217,6 +241,7 @@ def edit_account(request, account_id, account_name, account_name_real_life, desc
     )
     return redirect('index')
 
+@login_required(login_url='login/')
 def delete_account(request, account_id):
     requests.delete(
         server + '/api/accounts/' + str(account_id),
@@ -225,7 +250,7 @@ def delete_account(request, account_id):
     )
     return redirect('index')
 
-
+@login_required(login_url='login/')
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
     accounts_response = requests.get(url=server + '/api/accounts/', auth=auth, verify=False).json()
 
