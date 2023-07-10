@@ -76,7 +76,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=2, choices=TRANSACTION_OPTION, null=False, default='D')
     credit = models.BooleanField(null=False, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     send_to_account = models.ForeignKey(to=Account, related_name='send_to_account', on_delete=models.CASCADE)
     status = models.CharField(max_length=10, null=True)
     balance = models.DecimalField(max_digits=19, decimal_places=4)
