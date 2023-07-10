@@ -1,41 +1,65 @@
-from curses import has_key
 from datetime import datetime
-from wsgiref import headers
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 import requests
 from sgdapi.models import AccountHolder, Account
 from django.conf import settings
-# Create your views here.
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-auth=('janderson.araujo', 'protege123')
 server = settings.SERVER_NAME
 
+def get_header(request):
+    headers = {
+        'Authorization': 'Token ' + request.session['user_token']
+    }
+    return headers
+
+@login_required(login_url='login/')
 def index(request):
-    print(f'usuario logado: {request.user} - id: {request.user.id}')
-    # a = AccountHolder.objects.filter(user=request.user).first()
+    headers = get_header(request)
+    data = requests.get(url=server + '/api/accounts/', headers=headers, verify=False).json()
 
-    data = requests.get(url=server + '/api/accounts/', auth=auth, verify=False).json()
-
-    # pote_do_banco[1]['image'] = '"http://192.168.0.110:5001/api/apimedia/liberdade-financeira.png"'
-    #print(pote_do_banco)
-    
-    senha = 's'
-    if not senha:
-        return redirect('login')
-
-    return render(request, 'index.html',
-                                        {
+    return render(request, 'index.html', {
                                             'pote_do_banco': data,
                                             'page': 'Home',
                                             'account_holder_pic': request.user.prof_pic
-                                        }
+                                         }
             )
     # return render(request, 'index.html', {'potes': potes})
 
-def login(request):
+def log_in(request):
+    if request.method == 'POST':
+        # get values from form
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        data = {
+            'username': username,
+            'password': password
+        }
+
+        # configure a user instance based on username and password
+        user = authenticate(username=username, password=password)
+
+        # If user exists, we are able to request the token to our api
+        if user:
+            response = requests.post(url=server + '/api/token-auth/', data=data, verify=False)
+            request.session['user_token'] = response.json()['token']
+
+            #  Authorizating user
+            login(request, user=user)
+            return redirect('index')
+        return render(request, 'login.html')
+    
     return render(request, 'login.html')
 
+def log_out(request):
+    request.session.pop('user_token')
+    logout(request)
+    return redirect('login')
+
+@login_required(login_url='login/')
 def new_account(request):
     if request.method == 'GET':
         return render(
@@ -48,6 +72,7 @@ def new_account(request):
         )
         
     if request.method == 'POST':
+        headers = get_header(request)
         # files = {'file': open('/home/janderson/django/django-rest/sgd-project/sgd/static/icons/cofre.png', 'rb')}
         # headers = {'Content-Type': 'multipart/form-data'}
         data = {
@@ -62,13 +87,15 @@ def new_account(request):
             "active": True
             }
 
-        r = requests.post(url=server + '/api/accounts/', data=data, auth=auth, verify=False)
+        r = requests.post(url=server + '/api/accounts/', data=data, headers=headers, verify=False)
         # print(r.text)
         print(r.content)
         return redirect(to='index')
-
+    
+@login_required(login_url='login/')
 def account_statement(request, account_id: int):
-    data = requests.get(url=server + '/api/account/' + str(account_id) + '/transactions/', auth=auth, verify=False).json()
+    headers = get_header(request)
+    data = requests.get(url=server + '/api/account/' + str(account_id) + '/transactions/', headers=headers, verify=False).json()
     
     date_list = []
     for i in data:
@@ -90,19 +117,21 @@ def account_statement(request, account_id: int):
         }
     )
 
+@login_required(login_url='login/')
 def deposit(request, account_id: int):
+    headers = get_header(request)
     if request.POST:
         amount = request.POST.get('valor')
         description = request.POST.get('descricao')
 
-        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
+        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), headers=headers, verify=False)
         current_balance = account_response.json().get('balance')
         new_balance = float(current_balance) + float(amount)
         deposit_data = {
             "balance": new_balance,
         }
 
-        account_response = requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=deposit_data, auth=auth, verify=False)
+        account_response = requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=deposit_data, headers=headers, verify=False)
 
         if account_response.status_code != 200:
             return redirect('deposit', account_id=account_id)
@@ -118,9 +147,7 @@ def deposit(request, account_id: int):
             'balance': new_balance
         }
 
-        requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
-
-
+        requests.post(url=server + '/api/transactions/', data=transaction_data, headers=headers, verify=False)
         return redirect(to='index')
 
     return render(
@@ -133,20 +160,22 @@ def deposit(request, account_id: int):
             }
         )
 
+@login_required(login_url='login/')
 def withdraw(request, account_id: int):
+    headers = get_header(request)
     if request.POST:
         amount = request.POST.get('amount')
         description = request.POST.get('description')
         credit = request.POST.get('credit') == 'on'
 
-        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), auth=auth, verify=False)
+        account_response = requests.get(url=server + '/api/accounts/' + str(account_id), headers=headers, verify=False)
         current_balance = account_response.json().get('balance')
         new_balance = float(current_balance) - float(amount)
         withdraw_data = {
             "balance": new_balance,
         }
         
-        account_reponse = requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=withdraw_data, auth=auth, verify=False)
+        account_reponse = requests.patch(url=server + '/api/accounts/' + str(account_id) + '/', data=withdraw_data, headers=headers, verify=False)
 
         if account_reponse.status_code != 200:
             return redirect('withdraw', account_id=account_id)
@@ -163,7 +192,7 @@ def withdraw(request, account_id: int):
             'balance': new_balance
         }
 
-        r = requests.post(url=server + '/api/transactions/', data=transaction_data, auth=auth, verify=False)
+        r = requests.post(url=server + '/api/transactions/', data=transaction_data, headers=headers, verify=False)
         print(f'transação: {r.text}')
         return redirect(to='index')
 
@@ -177,6 +206,7 @@ def withdraw(request, account_id: int):
         }
     )
 
+@login_required(login_url='login/')
 def trasnfer(request):
     return render(
         request,
@@ -187,7 +217,9 @@ def trasnfer(request):
         }
     )
 
+@login_required(login_url='login/')
 def edit_account(request, account_id, account_name, account_name_real_life, description, percent):
+    headers = get_header(request)
     if request.method == 'GET':
         return render(
             request,
@@ -212,22 +244,25 @@ def edit_account(request, account_id, account_name, account_name_real_life, desc
     requests.patch(
         server + '/api/accounts/' + str(account_id) + '/',
         data,
-        auth=auth,
+        headers=headers,
         verify=False
     )
     return redirect('index')
 
+@login_required(login_url='login/')
 def delete_account(request, account_id):
+    headers = get_header(request)
     requests.delete(
         server + '/api/accounts/' + str(account_id),
-        auth=auth,
+        headers=headers,
         verify=False
     )
     return redirect('index')
 
-
+@login_required(login_url='login/')
 def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwargs pra pessoa dizer quais serão as contas da vida real para cada conta virtual
-    accounts_response = requests.get(url=server + '/api/accounts/', auth=auth, verify=False).json()
+    headers = get_header(request)
+    accounts_response = requests.get(url=server + '/api/accounts/', headers=headers, verify=False).json()
 
     standar_account_list = ['Liberdade Financeira', 'Poupança de Longo Prazo', 'Educação', 'Necessidades', 'Diversão', 'Doações']
     message = []
@@ -242,7 +277,7 @@ def creates_standard_accouts(request, user='janderson.araujo', **kwargs): # kwar
     
     for account in standar_account_dict:
         if account['account_name'] in standar_account_list:
-            r = requests.post(url=server + '/api/accounts/', data=account, auth=auth, verify=False)
+            r = requests.post(url=server + '/api/accounts/', data=account, headers=headers, verify=False)
     
     return redirect('index')
     

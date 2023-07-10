@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'sgdapi',
     'sgdweb',
     'drf_yasg',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -151,12 +152,17 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_FILTER_BACKENDS': [
+            'django_filters.rest_framework.DjangoFilterBackend'
+            ],
     'DEFAULT_PERMISSION_CLASSES': [ # I don't need to write the property 'permission__classes = [IsAuthenticated]' on view anymore
         'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.DjangoModelPermissions'
+        # 'rest_framework.permissions.DjangoModelPermissions'
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'], # I don't need to write the property 'authentication_classes = [BasicAuthentication]' on view anymore
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.BasicAuthentication',
+            'rest_framework.authentication.TokenAuthentication'
+            ], # I don't need to write the property 'authentication_classes = [BasicAuthentication]' on view anymore
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
 }
 

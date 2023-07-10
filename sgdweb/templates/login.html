@@ -19,10 +19,11 @@
                 <h3>Faça seu login</h3>
             </div>
             <div class="col-4 shadow p-3 mb-5 bg-body rounded">
-                <form method="POST" action="#">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
                     <input type="hidden" name="proxima" value="">
-                    <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="usuario" required></p>
-                    <p><label>Senha:</label> <input class="form-control" type="password" name="senha" required></p>
+                    <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="username" required></p>
+                    <p><label>Senha:</label> <input class="form-control" type="password" name="password" required></p>
                     <p><button class="btn btn-primary" type="submit">Entrar</button></p>
                 </form>
             </div>

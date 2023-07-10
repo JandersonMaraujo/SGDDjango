@@ -1,5 +1,7 @@
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from sgdapi.permissions import IsSuperUserPermission
 from sgdapi.models import Account, AccountHolder, Transaction, Log
 from sgdapi.serializers import (AccountSerializer, AccountHolderSerializer,
                                 TransactionSerializer, AllTransactionsForAnAccountHolderSerializer,
@@ -11,9 +13,12 @@ from sgdapi.serializers import (AccountSerializer, AccountHolderSerializer,
 
 class AccountViewSet(viewsets.ModelViewSet):
     """Listing all accounts"""
-    queryset = Account.objects.all()
     serializer_class = AccountSerializer
     # parser_classes = (MultiPartParser, FormParser) # apagar se não funciuonar o upload de imagens
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Account.objects.all()
+        return Account.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         log_create(self, serializer, 'create account')
@@ -27,11 +32,12 @@ class AccountViewSet(viewsets.ModelViewSet):
 
 class AccountHolderViewSet(viewsets.ModelViewSet):
     """Listing all AccountHolders"""
+    permission_classes = [IsAuthenticated, IsSuperUserPermission]
     queryset = AccountHolder.objects.all()
     serializer_class = AccountHolderSerializer
     filterset_fields = ['username'] # I had to install django-filter to be allowed to use it. This row means i can do something like: http://192.168.0.109:5001/account-holders?user_id=janderson.araujo&email=blablabla
     lookup_value_regex = '[^/]+' # issue abertta. As novas versões do django rest estão excluindo os caracteres "/" e ".". Fui orientado a escrever essa linha para que funcione o janderson.araujo como id de pesquisa na url
-
+    
     def create(self, request): # rewriting the create method in order to send to header the key location with the uri/url for future uses (create doesnt do this by default).
         serializer = self.serializer_class(data=request.data) # serializer rceive all data from the request
         if serializer.is_valid(raise_exception=True): # It is obligatory checking the data content.
@@ -53,9 +59,14 @@ class AccountHolderViewSet(viewsets.ModelViewSet):
 
 class TransactionViewSet(viewsets.ModelViewSet):
     """Listing all Transaction"""
-    queryset = Transaction.objects.all()
+    # queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     filterset_fields = ['created_at',]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Transaction.objects.all()
+        return Transaction.objects.filter(user=self.request.user)
 
     # def perform_create(self, serializer):
         # return serializer.save(user=self.request.user)
@@ -85,6 +96,7 @@ class AllTransactionsForAnAccountView(generics.ListAPIView):
 
 class LogView(generics.ListAPIView):
     """Listing all application loggings"""
+    permission_classes = [IsAuthenticated, IsSuperUserPermission]
     queryset = Log.objects.all()
     serializer_class = LogSerializer
 
