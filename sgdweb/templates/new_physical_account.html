@@ -1,0 +1,53 @@
+{% load static %}
+{% include 'partials/_header.html' %}
+<body>
+    {% include 'partials/_navbar.html' %}
+    <div class="container">
+        <div align="center" class="mb-2">
+            <img src="{% static 'icons/banco.png'%}" width="10%">
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col12  col-md-6 col-lg-4 shadow p-3 mb-5 bg-body rounded">
+                <h2 align="center">Nova conta física</h2>
+                <form action="{% url 'new_physical_account' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset>
+                        {% comment %} <div class="form-group input-group-sm mb-3">
+                            <label for="bank"><small>Banco</small></label>
+                            <input type="text" id="bank" name="bank" class="form-control col-lg-8" placeholder="Nome do banco">
+                        </div> {% endcomment %}
+                        <div class="form-group mb-3">
+                            <label for="bank"><small>Banco</small></label>
+                            <select name="bank" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                    {% for bank in bank_list %}
+                                        <option value="{{ bank }}">{{ bank }}</option>
+                                    {% endfor %}
+                                    {% comment %} <option value="">Bradesco</option> {% endcomment %}
+                              </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="account-type"><small>Tipo</small></label>
+                            <select name="account-type" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                    <option value="Conta corrente">Conta corrente</option>
+                                    <option value="Conta poupança">Conta poupança</option>
+                              </select>
+                        </div>
+                        <div class="form-group input-group-sm mb-3">
+                            <label for="descricao"><small>Descrição</small></label>
+                            {% comment %} <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Insira mais detalhes sobre a conta"> {% endcomment %}
+                            <textarea class="form-control" id="descricao" name="description" rows="3" placeholder="Insira mais detalhes sobre a conta"> </textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFileSm" class="form-label">Small file input example</label>
+                            <input class="form-control form-control-sm" id="formFileSm" type="file" name="logo">
+                          </div>
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">Criar conta</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.js' %}"></script>
+</body>
+</html>
