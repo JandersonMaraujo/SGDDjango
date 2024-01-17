@@ -1,6 +1,6 @@
 from pkg_resources import require
 from rest_framework import serializers
-from sgdapi.models import Account, AccountHolder, Transaction, Log
+from sgdapi.models import Account, PhysicalAccount, Transaction, Log
 from sgdapi.validators import *
 from django.contrib.auth import get_user_model
 
@@ -22,6 +22,11 @@ class AccountHolderSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'phone': 'Phone needs to follow the example: 11912345678'})
         
         return data
+    
+class PhysicalAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhysicalAccount
+        fields = '__all__'
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:

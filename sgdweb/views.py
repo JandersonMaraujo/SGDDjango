@@ -17,6 +17,12 @@ def get_header(request):
 
 @login_required(login_url='login/')
 def index(request):
+    # If there's no user token in request.session It means
+    # we dont have user info in request, so we need to
+    # force login once again
+    if not request.session.get('user_token'):
+        return render(request, 'login.html')
+    
     headers = get_header(request)
     data = requests.get(url=server + '/api/accounts/', headers=headers, verify=False).json()
 
