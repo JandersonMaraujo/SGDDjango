@@ -56,6 +56,16 @@ class Account(models.Model):
 
     def __str__(self) -> str:
         return self.account_name
+    
+class PhysicalAccount(models.Model):
+    virtual_account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, null=False)
+    user = models.ForeignKey(to=AccountHolder, on_delete=models.CASCADE)
+    initials = models.CharField(max_length=15)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
 
 class Transaction(models.Model):
     DEPOSITO = 'D'

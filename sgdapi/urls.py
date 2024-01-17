@@ -1,10 +1,10 @@
 from django.urls import path, include
 from rest_framework import routers
 from sgdapi.views import (
-                           AccountViewSet, AccountHolderViewSet, TransactionViewSet,
-                           AllTransactionsForAnAccountHolderView, AllTransactionsForAnAccountView,
-                           LogView
-                  )
+    AccountViewSet, AccountHolderViewSet, TransactionViewSet,
+   AllTransactionsForAnAccountHolderView, AllTransactionsForAnAccountView,
+   LogView, PhysicalAccountViewSet
+)
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
@@ -25,6 +25,7 @@ schema_view = get_schema_view(
 
 router = routers.DefaultRouter()
 router.register('accounts', AccountViewSet, basename='Accounts')
+router.register('physical_accounts', PhysicalAccountViewSet, basename='physical_accounts')
 router.register('account-holders', AccountHolderViewSet, basename='Account-Holders')
 router.register('transactions', TransactionViewSet, basename='Transactions')
 

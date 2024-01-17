@@ -2,11 +2,15 @@ from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from sgdapi.permissions import IsSuperUserPermission
-from sgdapi.models import Account, AccountHolder, Transaction, Log
-from sgdapi.serializers import (AccountSerializer, AccountHolderSerializer,
-                                TransactionSerializer, AllTransactionsForAnAccountHolderSerializer,
-                                AllTransactionsForAnAccountSerializer, LogSerializer, LogUserSerializer
-                        )
+from sgdapi.models import (
+    Account, PhysicalAccount, AccountHolder, Transaction, Log
+)
+from sgdapi.serializers import (
+    AccountSerializer, AccountHolderSerializer, TransactionSerializer,
+    AllTransactionsForAnAccountHolderSerializer,
+    AllTransactionsForAnAccountSerializer, LogSerializer, LogUserSerializer,
+    PhysicalAccountSerializer
+)
 # from rest_framework.parsers import MultiPartParser, FormParser
 
 # Create your views here.
@@ -56,6 +60,12 @@ class AccountHolderViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance):
         log_delete(self, instance, 'delete account holder')
+
+class PhysicalAccountViewSet(viewsets.ModelViewSet):
+    """Listing and editing physical accounts"""
+    permission_classes = [IsAuthenticated, IsSuperUserPermission]
+    queryset = PhysicalAccount.objects.all()
+    serializer_class = PhysicalAccountSerializer
 
 class TransactionViewSet(viewsets.ModelViewSet):
     """Listing all Transaction"""
